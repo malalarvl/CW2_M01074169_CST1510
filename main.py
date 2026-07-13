@@ -2,6 +2,9 @@ import bcrypt
 import sqlite3
 import pandas as pd
 
+from app_model.db import conn
+from app_model.user import add_user , get_user
+
 #hashed using bcrypt
 def generate_hash(psw):
     byte_psw = psw.encode('utf-8')
@@ -18,23 +21,19 @@ def is_valid_hash(psw, hash):
 
 
 #user registration
-def register_user():
+def register_user(conn):
     name = input('Enter your name: > ')
     password = input('Enter your password: > ')
     hashed_password = generate_hash(password)
-    with open('DATA/users.txt', 'a') as f:
-        f.write(f'{name},{hashed_password}\n')
-    print('User  successfully registered!')
+    add_user(conn, name, hashed_password)
 
 #user login
-def log_in_user():
+def log_in_user(conn):
     name = input('Enter your name: > ')
     password = input('Enter your password: > ')
-    with open('DATA/users.txt', 'r') as f:
-        users = f.readlines()
-    for user in users:
-        user_name, user_hash = user.strip().split(',')
-        if name == user_name and is_valid_hash(password, user_hash):
+    id, user_name, user_hash = get_user(conn, name)
+    print(f'Welcome {user_name}!')
+    if name == user_name and is_valid_hash(password, user_hash):
             return True
     return False
 
@@ -49,9 +48,9 @@ def main():
         choice = input(' > ')
 
         if choice == '1':
-            register_user()
+            register_user(conn)
         elif choice == '2':
-            if log_in_user():
+            if log_in_user(conn):
                 print('Login successful!')
             else:
                 print('Incorrect log in. Try again.')
@@ -59,100 +58,16 @@ def main():
             print('Goodbye!')
             break
 
-def create_useer_table(conn):
-    cur = conn.cursor()
-    sql = '''CREATE TABLE users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL,
-    password_hash TEXT NOT NULL
-    );
-    '''
-    cur.execute(sql)
-    conn.commit()
-
-
-def add_user(conn, name, hash):
-    cur = conn.cursor()
-    sql = '''INSERT INTO users (username, password_hash) VALUES (?, ?) '''
-    param = (name, hash)
-    cur.execute(sql, param)
-    conn.commit()
+if __name__ == '__main__':
+    main()
 
 
 
-def migrate_user(conn):
-    with open('DATA/users.txt', 'r') as f:
-        users = f.readlines()
-
-    for user in users:
-        user_name, user_hash = user.strip().split(',')
-        add_user(conn, user_name, user_hash)
-
-
-def get_all_users(conn):
-    cur = conn.cursor()
-    sql = '''SELECT * FROM users '''
-    cur.execute(sql)
-    user = cur.fetchall()
-    conn.close()
-    return user
-
-def get_user(conn, name):
-    cur = conn.cursor()
-    sql = '''SELECT * FROM users WHERE username = ? '''
-    param = (name,)
-    cur.execute(sql, param)
-    user = cur.fetchone()
-    conn.close()
-    return (user)
-
-def update_user(conn, old_username, new_username):
-    cur = conn.cursor()
-    sql = 'UPDATE users SET username = ? WHERE username = ?'
-    param = (new_username, old_username)
-    cur.execute(sql, param)
-    conn.commit()
-
-def delete_user(conn, username):
-    cur = conn.cursor()
-    sql = 'DELETE FROM users WHERE username = ?'
-    param = (username,)
-    cur.execute(sql, param)
-    conn.commit()
-
-
-def migrate_cyber_incidents(conn):
-    data = pd.read_csv('DATA/cyber_incidents.csv')
-    data.to_sql('cyber_incidents', conn)
     
-def migrate_datasets_metadata(conn):
-    data = pd.read_csv('DATA/datasets_metadata.csv')
-    data.to_sql('datasets_metadata', conn)
 
-def migrate_it_tickets(conn):
-    data = pd.read_csv('DATA/it_tickets.csv')
-    data.to_sql('it_tickets', conn)
 
-def get_all_cyber_incidents(conn):
-    sql = 'SELECT * FROM cyber_incidents'
-    data = pd.read_sql(sql, conn)
-    conn.close()
-    return (data)
 
-def get_all_datasets_metadata(conn):
-    sql = 'SELECT * FROM datasets_metadata'
-    data = pd.read_sql(sql, conn)
-    conn.close()
-    return (data)
 
-def get_all_it_tickets(conn):
-    sql = 'SELECT * FROM it_tickets'
-    data = pd.read_sql(sql, conn)
-    conn.close()
-    return (data)
-
-conn = sqlite3.connect('DATA/project_data.db')
-print(get_all_it_tickets(conn))
 
 
 
