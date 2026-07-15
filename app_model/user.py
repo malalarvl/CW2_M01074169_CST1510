@@ -21,7 +21,6 @@ def get_all_users(conn):
     sql = '''SELECT * FROM users '''
     cur.execute(sql)
     user = cur.fetchall()
-    conn.close()
     return user
 
 def get_user(conn, name):
@@ -30,7 +29,6 @@ def get_user(conn, name):
     param = (name,)
     cur.execute(sql, param)
     user = cur.fetchone()
-    conn.close()
     return (user)
 
 def update_user(conn, old_username, new_username):
