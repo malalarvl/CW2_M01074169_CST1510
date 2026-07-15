@@ -3,7 +3,7 @@ import sqlite3
 import pandas as pd
 
 from app_model.db import conn
-from app_model.user import add_user , get_user
+from app_model.users import add_user , get_user
 
 #hashed using bcrypt
 def generate_hash(psw):
