@@ -9,7 +9,11 @@ if 'logged_in' not in st.session_state:
     st.session_state['logged_in'] = False
 
 if not st.session_state['logged_in']:
-    st.warning("Please log in")
+    st.warning("Please log in to access to dashboard.")
+    
+    if st.button("Go to Login Page"):
+        st.session_state['logged_in'] = False
+        st.switch_page("Home.py")
     st.stop()
 else:
     st.success("You are logged in!")
@@ -30,6 +34,7 @@ data['timestamp'] = pd.to_datetime(data['timestamp'])
 filtered_data = data[data['severity'] == severity_]
 
 col1, col2 = st.columns(2)
+
 with col1:
     st.subheader(f"Cyber Incidents with Severity Level: {severity_}")
     st.bar_chart(filtered_data['category'].value_counts())
