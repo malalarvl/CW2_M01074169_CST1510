@@ -1,0 +1,11 @@
+# web dashboard and UI
+streamlit
+
+# secure password hashing
+bcrypt==5.0.0
+
+# data manipulation and CSV/SQL bridge
+pandas
+
+# AI chatbot integration via Groq API
+groq
