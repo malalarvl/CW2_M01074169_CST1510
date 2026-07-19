@@ -23,10 +23,10 @@ cd CW2_M01074169_CST1510
 -Step 2 — Create and activate a virtual environment
 python -m venv .venv
 
-# Windows
+*Windows
 .venv\Scripts\activate
 
-# Mac/Linux
+*Mac/Linux
 source .venv/bin/activate
 
 -Step 3 — Install all dependencies
@@ -42,5 +42,5 @@ Go to 'Dashboard.py' and run on terminal 'streamlit run Home.py'
 
 -Default Test Account
 Register a new account on the login page.
-An admin account can be set up by updating the role column in the database.
+An admin account can be set up by running 'add_role.py' file and entering username
 Or by user name: 'Admin' and password: 'Admin123'
