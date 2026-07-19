@@ -113,7 +113,7 @@ with tab1:
 with tab2:
     st.subheader("IT Tickets")
 
-    st.bar_chart(filtered_tickets['status'].value_counts())
+    st.bar_chart(filtered_tickets['priority'].value_counts())
     st.dataframe(filtered_tickets)
     st.download_button(label="Download as CSV", 
                        data=filtered_tickets.to_csv(index=False),

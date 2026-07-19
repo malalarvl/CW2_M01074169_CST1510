@@ -6,7 +6,7 @@ import streamlit as st
 from groq import Groq
 
 #load API key
-client = Groq(api_key="Add your key here")
+client = Groq(api_key="Add API KEY HERE")
 
 st.title("Chat Assistant")
 st.caption("Ask me anything about this application or project data.")
