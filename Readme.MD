@@ -41,6 +41,6 @@ Add your API key 'client = Groq(api_key="Add your API key here")'
 Go to 'Dashboard.py' and run on terminal 'streamlit run Home.py'
 
 -Default Test Account
-Register a new account on the login page.
+Register a new account on the login page where each user are assigned as 'user' by default.
 An admin account can be set up by running 'add_role.py' file and entering username
 Or by user name: 'Admin' and password: 'Admin123'
